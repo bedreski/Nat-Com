@@ -1,5 +1,5 @@
 # Redes Neurais Recorrentes 
-# 27/03/23 (se eu entendi certo, é o que tá no Colab do Matheus) 
+# 27/02/23 (se eu entendi certo, é o que tá no Colab do Matheus) 
 
 
 #Origem do arquivo CSV
