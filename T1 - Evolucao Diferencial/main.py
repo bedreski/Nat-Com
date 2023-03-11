@@ -68,7 +68,7 @@ def f_objetivo(x):
 
     return somatorio
 
-def f_produzido(x):
+def f_produzido(x = ()):
     somatorio = 0 
 
     # P_i 
@@ -81,8 +81,7 @@ def f_produzido(x):
 # Somatório_i(P_i) - P_D = 0
 nlc = NonlinearConstraint(f_produzido() - potencia, -0.01, 0.01)
 
-result = optimize.differential_evolution(
-    f_objetivo, bounds, args=(), 
+result = optimize.differential_evolution(f_objetivo, bounds, args=(), 
     strategy='best1bin', #Alterar
     maxiter=1000, #Alterar
     popsize=50, #Alterar
@@ -98,3 +97,8 @@ result = optimize.differential_evolution(
     constraints=(nlc), #Non Linear Contraints 
     x0=None)
 
+
+#Printando resultados 
+print('Result x: ')
+print(result.x)
+print('/n')

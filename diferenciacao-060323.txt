@@ -1,0 +1,50 @@
+# Diferenciação 
+# 06/03/23
+
+def diferenciacao(dados, intervalo=1):
+  dife=list()
+  for i in range(intervalo, len(dados)):
+    valor = dados[i] - dados[i - intervalo] # aqui ta a diferenciacao
+    dife.append(valor)
+  return Series(dife)
+  
+
+print(series)
+diferenciada = diferenciacao(series.values)
+print('////////////////////////////////////')
+print(diferenciada)
+pyplot.plot(diferenciada)
+pyplot.show()
+
+#Reverter a diferenciação 
+
+def inverso_diferenciacao(historico, diferenca, intervalo):
+  return historico[-intervalo] + diferenca
+  
+
+#Teste
+
+inversa = list()
+for i in range(len(diferenciada)):
+  valor = inverso_diferenciacao(series.values, diferenciada[i], len(series) - i)
+  inversa.append(valor)
+inversa = Series(inversa)
+print(inversa)
+
+
+#Arrumando a escala 
+
+X = series.values
+X = X.reshape(len(X), 1)
+escala = MinMaxScaler(feature_range = (-1, 1))
+escala = escala.fit(X)
+X_norm = escala.transform(X)
+# X_norm = Series(X_norm) ? ele tacou essa inha dps mas nao entendi pq, ja q da erro (Colab do Matheus, 2023) 
+pyplot.plot(X_norm)
+pyplot.show()
+# valor_n = ((valor - min) / (max - min)) * 2 - 1
+X_orig = escala.inverse_transform(X_norm)
+pyplot.plot(X_orig)
+pyplot.show()
+
+
