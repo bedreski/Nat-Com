@@ -1,0 +1,45 @@
+# 03 de abril de 2023 
+
+
+def geradora(dim_latente):
+	modelo = Sequential()
+	num_neuronios = 128*7*7 #para o Cifar100 se mudar para 8, chega em 32x32 
+	modelo.add(Dense(num_neuronios, input_shape = dim_latente))
+	modelo.add(LeakyReLU(alpha=0.2))
+	modelo.add(Reshape((7,7,128))) #imagem 7x7 
+	modelo.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same')) #imagem 14x14 / 128: número de neurônios 
+	
+	modelo.add(LeakReLU(alpha=0.2))
+	modelo.add(Conv2DTranspose(128, (4,4), strides=(2,2), padding='same')) #imagem 28x28 
+	modelo.add(LeakyReLU(alpha=0.2))
+	modelo.add(Conv2D(1, (7,7), activation='sigmoid', padding='same'))
+	return modelo 
+	
+	
+def gan(modelo_g, modelo_d):
+	modelo_d.trainable=False 
+	modelo = Sequential()
+	modelo.add(modelo_g)
+	modelo.add(modelo_d)
+	opt = Adam(lr=0.0002, beta_1=0.5)
+	modelo.compile(loss='binary_crossentropy', optimizer=opt)
+	return modelo
+
+def treina(modelo_g, modelo_d, modelo_gan, dados, dim_latent, num_epocas=100, tam_batch=256):
+	batches_por_epoca = int(dados.shape[0]/tam_batch)
+	metade_batch = tam_batch/2
+	
+	#treinamento 
+	
+	for i in range(num_epocas):
+		for j in range (batches_por_epoca):
+			dados_reais, rotulos_reais = gera_reais(dados, metade_batch)
+			modelo_d.train_on_batch()
+
+
+dados_gan = gera_dimensao_latente(dimensao_latente)
+rotulos_gan = ones((tam_batch, 1)) #numpy, gera um vetor de un's, os dados da GAN são verdadeiros pra enganar a detectora
+gan_perda = modelo_gan.train_on_batch(dados_gan, rotulos_gan) 
+
+	
+
